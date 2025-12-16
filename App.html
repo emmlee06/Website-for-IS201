@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Purr-plexing Puzzle Box</title>
+
+    <style>
+        /* * 😻 KITTY THEME CSS 😻
+         */
+        body {
+            font-family: 'Verdana', 'Arial', sans-serif; /* A simple, rounded, legible font */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #ffe6f2; /* Soft pink background */
+            /* Subtle Cat Paw Pattern Background */
+            background-image: radial-gradient(circle, #fcd7e6 10%, transparent 10%),
+                              radial-gradient(circle, #fcd7e6 10%, transparent 10%);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            color: #3e0a3f; /* Deep violet/purple text */
+            text-align: center;
+            position: relative; /* Needed for absolute positioning of 'BAD KITTY' */
+        }
+
+        .container {
+            background-color: #ffffff; /* Crisp white container */
+            border: 5px solid #ff70a6; /* Bright pink border */
+            padding: 40px;
+            border-radius: 20px; /* More rounded look */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+            z-index: 10; /* Ensure container is above the BAD KITTY overlay */
+        }
+
+        h1 {
+            color: #703c72; /* Darker violet for the title */
+            margin-bottom: 25px;
+            text-shadow: 2px 2px #ffc700; /* Gold shadow */
+        }
+
+        #riddle-display {
+            font-size: 1.4em;
+            margin: 20px 0 30px;
+            min-height: 60px; 
+            font-style: italic;
+            color: #3e0a3f;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        #result-message {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #28a745; /* Green for correct answer */
+            margin-top: 15px;
+            min-height: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        #answer-input {
+            padding: 10px;
+            font-size: 1em;
+            border: 2px solid #ff70a6;
+            border-radius: 8px;
+            width: 70%;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        #answer-input:focus {
+            outline: none;
+            border-color: #ffc700;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            margin: 8px;
+            border: none;
+            border-radius: 20px; /* Kitty-paw buttons */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            font-weight: bold;
+            font-size: 1em;
+            box-shadow: 0 4px #4a214d;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px #4a214d;
+        }
+
+        #generate-btn {
+            background-color: #ffc700; /* Gold button */
+            color: #3e0a3f;
+        }
+
+        #generate-btn:hover {
+            background-color: #e5b300;
+        }
+
+        #submit-btn {
+            background-color: #ff70a6; /* Bright pink button */
+            color: white;
+            box-shadow: 0 4px #d4598a;
+        }
+
+        #submit-btn:active {
+            box-shadow: 0 2px #d4598a;
+        }
+
+        /* 🙀 BAD KITTY OVERLAY STYLE 🙀 */
+        #bad-kitty-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(100, 0, 0, 0.7); /* Reddish overlay */
+            color: #ffffff;
+            font-size: 8vw; /* Large, screen-filling text */
+            font-weight: 900;
+            text-align: center;
+            text-transform: uppercase;
+            line-height: 100vh;
+            text-shadow: 5px 5px #000000;
+            z-index: 1000;
+            cursor: pointer; /* Click to dismiss */
+            animation: badKittyFlash 0.3s ease-in-out 3; /* Flash 3 times */
+        }
+        
+        @keyframes badKittyFlash {
+            0%, 100% { background-color: rgba(100, 0, 0, 0.7); }
+            50% { background-color: rgba(255, 0, 0, 0.9); }
+        }
+
+        .nav-link-style {
+            color: #a0a0a0;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-top: 20px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bad-kitty-overlay" onclick="this.style.display='none'">BAD KITTY!</div>
+
+    <div class="container">
+        <h1>The Purr-plexing Puzzle Box 🐾</h1>
+
+        <div id="riddle-display">Click 'Generate New Riddle' to begin the quest...</div>
+        
+        <div class="input-group">
+            <input type="text" id="answer-input" placeholder="Your purr-dicted answer">
+        </div>
+
+        <button id="submit-btn" class="btn">Submit Paw-sition 😼</button>
+        <button id="generate-btn" class="btn">New Quest</button>
+        
+        <div id="result-message"></div>
+
+        <p>
+            <a href="index.html" class="nav-link-style">&larr; Back to Professional Homepage</a>
+        </p>
+    </div>
+
+    <script>
+        const riddles = [
+            { riddle: "I have no voice, but I can tell you all about the world. I have pages, but I am not a tree. What am I?", answer: "Book" },
+            { riddle: "I am always hungry, I must always be fed, the finger I touch, will soon turn red. What am I?", answer: "Fire" },
+            { riddle: "What has cities, but no houses; forests, but no trees; and water, but no fish?", answer: "Map" },
+            { riddle: "What is full of holes but still holds water?", answer: "Sponge" },
+            { riddle: "I have keys, but open no doors. I have a space, but no room. You can enter, but can’t go outside. What am I?", answer: "Keyboard" },
+            { riddle: "What has an eye but cannot see?", answer: "Needle" }
+        ];
+
+        let currentRiddle = null;
+
+        const riddleDisplay = document.getElementById('riddle-display');
+        const answerInput = document.getElementById('answer-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const generateBtn = document.getElementById('generate-btn');
+        const resultMessage = document.getElementById('result-message');
+        const badKittyOverlay = document.getElementById('bad-kitty-overlay');
+
+        function normalizeAnswer(text) {
+            return text.toLowerCase().trim().replace(/[^a-z0-9]/g, ''); // Remove spaces/punctuation, lower case
+        }
+
+        function generateRiddle() {
+            // Remove previous animation class to trigger it again
+            riddleDisplay.style.opacity = 0; // Quick reset
+            void riddleDisplay.offsetWidth; // Trigger reflow
+            riddleDisplay.style.opacity = 1; // Animation will handle fade in
+
+            let newRiddle;
+            do {
+                const randomIndex = Math.floor(Math.random() * riddles.length);
+                newRiddle = riddles[randomIndex];
+            } while (newRiddle === currentRiddle && riddles.length > 1);
+            
+            currentRiddle = newRiddle;
+
+            riddleDisplay.textContent = currentRiddle.riddle;
+            answerInput.value = ''; // Clear previous input
+            resultMessage.textContent = '';
+            submitBtn.style.display = 'inline-block';
+            answerInput.disabled = false;
+        }
+
+        function checkAnswer() {
+            if (!currentRiddle) return;
+
+            const userAnswer = normalizeAnswer(answerInput.value);
+            const correctAnswer = normalizeAnswer(currentRiddle.answer);
+
+            if (userAnswer === correctAnswer) {
+                resultMessage.textContent = 'Purr-fect! You are a clever kitty! 😻';
+                resultMessage.style.color = '#28a745'; // Green
+                submitBtn.style.display = 'none';
+                answerInput.disabled = true;
+
+            } else {
+                resultMessage.textContent = `Nope. The answer was: ${currentRiddle.answer}`;
+                resultMessage.style.color = '#dc3545'; // Red
+                
+                // 🙀 BAD KITTY FUNCTIONALITY 🙀
+                badKittyOverlay.style.display = 'block';
+                setTimeout(() => {
+                    // Hide after the animation finishes
+                    if (badKittyOverlay.style.display === 'block') {
+                        badKittyOverlay.style.display = 'none';
+                    }
+                }, 1000); // 3 flashes * 0.3s per flash = 0.9s
+            }
+        }
+
+        // Event Listeners
+        generateBtn.addEventListener('click', generateRiddle);
+        submitBtn.addEventListener('click', checkAnswer);
+        answerInput.addEventListener('keypress', function(e) {
+            // Check answer on 'Enter' key press
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Initialize with a riddle on load
+        generateRiddle(); 
+    </script>
+
+</body>
+</html>

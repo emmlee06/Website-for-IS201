@@ -1,0 +1,37 @@
+/* Required Style 1: Custom Background Color (4+ Styles Total) */
+body {
+    background-color: #f0fff0; /* Honeydew light green background */
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Required Style 2: Styling for the Main Header Div (Includes Font Color & Family 1) */
+.header-div {
+    background-color: #e6e6fa; /* Lavender */
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    text-align: center;
+    color: #4b0082; /* Indigo Font Color */
+    font-family: 'Georgia', serif; /* Font Family 1 */
+}
+
+/* Required Style 3: Styling for Content Block Divs (Three Divs Required) */
+.content-div {
+    background-color: #ffffff; /* White content block */
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Required Style 4: Styling for Anchors/Links (Includes Font Color & Family 2) */
+.nav-link-style {
+    color: #008080; /* Teal Font Color */
+    font-family: 'Verdana', sans-serif; /* Font Family 2 */
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 15px;
+}
